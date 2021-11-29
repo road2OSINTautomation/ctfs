@@ -1,42 +1,50 @@
-## Capture the flag writeups
+## Sector035's OSINT quiz
 
-I will constantly be updating and adding new writeups for challenges. Any Code I write alongside the challenge will
-be published in this repo as well and referenced in the writeup.
+The [osint quiz](https://twitter.com/Sector035/status/1211038518635614208) of
+[𝕊𝕖𝕔𝕥𝕠𝕣𝟘𝟛𝟝](https://twitter.com/Sector035) and the [Quiztime](https://twitter.com/Quiztime) crew is probably the 
+challenge you read most about (at least combined with OSINT).
 
-### Overview
-- Sector035 OSINT quiz (https://twitter.com/Sector035/status/1211038518635614208)
-You can use the [editor on GitHub](https://github.com/road2OSINTautomation/ctfs/edit/main/docs/index.md) to maintain and preview the content for your website in Markdown files.
+--------------------------
+### Challenge 0 - Start
+As told in the referenced tweet above you start this quiz by sending an email to osintquiz@gmail.com
+with the subject "start".
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+After sending this initial email you will receive a short introduction on how the ctf works and which subjects will 
+be covered:
+> - Geolocation (determining locations)
+> - SIGINT (from 3G/LTE to WiFi)
+> - Social media (anything goes!)
+> - News articles (from any country)
+> - Surface web & dark web (no worries, we'll stay legal!)
+> - Metadata in files (a bit of basic forensics can't hurt right?)
+> - Tracking traffic or objects (start looking up some URL's!)
+> - Maybe more...
 
-### Markdown
+--------------------------
+### Challenge 1
+> Create the MD5 hash of the word "puzzletweet"
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+#### What is MD5?
+>The MD5 (message-digest algorithm) hashing algorithm is a one-way cryptographic function that accepts a message of any length as input and returns as output a fixed-length digest value to be used for authenticating the original message.
+> -- <cite>[TechTarget](https://www.techtarget.com/searchsecurity/definition/MD5) </cite>
 
-```markdown
-Syntax highlighted code block
 
-# Header 1
-## Header 2
-### Header 3
+Of course the md5 hash can be calculated using the command line command "md5sum":
+````commandline
+echo -n "puzzletweet" | md5sum
+````
+Keep in mind the -n option removes the newline after the echo output as you dont want the
+newline character to be part of the plaintext string.
 
-- Bulleted
-- List
+As I want to expand my python skills, I'll be trying to solve as many challenges as possible also in python:
+````python
+import hashlib
 
-1. Numbered
-2. List
+plaintext = "puzzletweet"
+encoded_text = hashlib.md5(plaintext.encode())
 
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/road2OSINTautomation/ctfs/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+print("The md5 of " + plaintext + " is: " + str(encoded_text.hexdigest()))
+````
+Pythonfile: 
+[challenge001.py](../../../src/sector035_osintquiz/challenge001.py)
+--------------------------
