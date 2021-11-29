@@ -46,6 +46,6 @@ encoded_text = hashlib.md5(plaintext.encode())
 print("The md5 of " + plaintext + " is: " + str(encoded_text.hexdigest()))
 ````
 Pythonfile: 
-[challenge001.py](../../../src/sector035_osintquiz/challenge001.py)
+[challenge001.py](https://github.com/road2OSINTautomation/ctfs/blob/main/src/sector035_osintquiz/challenge001.py)
 
 --------------------------
