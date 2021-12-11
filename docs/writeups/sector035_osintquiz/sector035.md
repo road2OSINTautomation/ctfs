@@ -153,7 +153,38 @@ hash_object = hashlib.md5(photo_id.encode()).hexdigest()
 print(hash_object)
 ```
 <p align="center">
-<img  src="https://media1.giphy.com/media/3o7btNa0RUYa5E7iiQ/giphy.gif" width="250" >
+<img src="https://media1.giphy.com/media/3o7btNa0RUYa5E7iiQ/giphy.gif" width="250" >
 </p>
 
 -----------------------------------
+
+### Challenge 3
+
+> What is the profile id of the following Instagram account? <br />
+> https://www.instagram.com/micro_bar
+
+Using Instagram's internal api "instagram.com/web/search/" easily gives you the results for a search 
+as JSON back.
+Parsing the result and looking for the specific username will give you the "pk" attribute.
+```json
+{"position":1,"user":{"pk":"2260998159","username":"micro_bar","full_name":"#MicroBar #Reykjavík #Iceland","is_private":false,"profile_pic_url":"https://instagram.fman4-1.fna.fbcdn.net/v/t51.2885-19/s150x150/12144329_1248859285130119_1067992394_a.jpg?_nc_ht=instagram.fman4-1.fna.fbcdn.net\u0026_nc_cat=107\u0026_nc_ohc=BCtTkekmQ_0AX-hRWOy\u0026edm=AHG7ALcBAAAA\u0026ccb=7-4\u0026oh=d9471bb0b6d6577cdab72e2c3d4fad33\u0026oe=61BB2E62\u0026_nc_sid=5cbaad","is_verified":false,"follow_friction_type":-1,"has_anonymous_profile_picture":false,"has_highlight_reels":false,"account_badges":[],"latest_reel_media":0,"live_broadcast_id":null,"should_show_category":false}}
+```
+
+Instagram seems to block you pretty quickly and in response will want you to log in (even if the profile is public).
+For that try using a vpn, different browser/private browser or wait a couple of minutes.
+For me the only thing that did the trick was to wait roughly around 5 minutes.
+
+```python
+import requests
+username = "micro_bar"
+url = "https://www.instagram.com/web/search/topsearch/?context=blended&query=" + username
+response = requests.get(url)
+response_json = response.json()
+
+for entry in response_json["users"]:
+    if entry["user"]["username"] == username:
+        print(entry["user"]["pk"])
+```
+
+-----------------------------------
+
