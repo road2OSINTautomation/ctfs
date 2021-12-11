@@ -118,5 +118,42 @@ alert(document.querySelector('div[data-testid="placementTracking"] div[data-test
 #### Summary
 Wow this straight forward challenge really got me digging into the twitter API. Great opportunity 
 which I otherwhise would probably not have done so soon!
+<br />
+
+### Anyway....
+<img src="https://media3.giphy.com/media/3oKIP9S5GvYbDpHWkE/giphy.gif" width="450" >
+
+### ...forget about that
+<br/>
+
+#### A much better solution
+After asking for any other existing Python Twitter-Libraries on reddit I got TWINT recommended.
+
+Now...all that messing around whether finding out how to use the older and the newer Twitter API or 
+setting up the developer account would have not been necessary.
+TWINT did the whole challenge 2 in just 17 lines of code.
+[challenge002_twint.py](https://github.com/road2OSINTautomation/ctfs/blob/main/src/sector035_osintquiz/challenge002_twint.py)
+```python
+import hashlib
+import twint
+
+c = twint.Config()
+c.Search = "puzzle"
+c.Username = "sector035"
+c.Since = "2017-12-01"
+c.Until = "2017-12-31"
+c.Images = True
+c.Pandas = True
+
+tweet = twint.run.Search(c)
+Tweets_df = twint.storage.panda.Tweets_df
+photo_url = Tweets_df['photos'].to_string(index=False).replace('[','').replace(']','')
+photo_id = ".".join(photo_url.split('/media/')[-1].split('.')[0:-1])
+hash_object = hashlib.md5(photo_id.encode()).hexdigest()
+print(hash_object)
+```
+<p align="center">
+<img  src="https://media1.giphy.com/media/3o7btNa0RUYa5E7iiQ/giphy.gif" width="250" >
+</p>
 
 -----------------------------------
