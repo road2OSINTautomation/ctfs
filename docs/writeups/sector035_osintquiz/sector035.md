@@ -192,3 +192,41 @@ For me the only thing that did the trick was to wait roughly around 5 minutes.
 
 -----------------------------------
 
+### Challenge 4
+> What is the MD5 hash of following Facebook ID: <br />
+> https://www.facebook.com/SilensecGroup
+
+I decided to do this challenge using requests as the profile is public and un less you 
+do too many requests after each other you will be able to visit the page without having to login.
+
+[challenge004.py](https://github.com/road2OSINTautomation/ctfs/blob/main/src/sector035_osintquiz/challenge004.py)
+
+```python
+import requests
+
+user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4476.0 " \
+             "Safari/537.36 "
+HEADERS = ({'User-Agent': user_agent,
+            'Accept-Language': 'en-US, en;q=0.8'})
+
+profile_url = "https://www.facebook.com/SilensecGroup"
+response = requests.get(profile_url, headers=HEADERS)
+response_string = str(response.content)
+
+profile_id = response_string.split('entity_id":"')[1].split('"}')[0]
+print("Facebook profile:\t" + profile_url)
+print("ID:\t\t\t\t\t" + profile_id)
+``` 
+I would have preferred to parse the html with beautifulsoup or lxml and get the profile picture by the element 
+with the attribute "arial-label" having the value "Profile picture".
+
+Doing it manually my favorite way is inspecting the profile picture and getting the id from the picture url:
+> <a <mark style="background-color: lightblue">aria-label="Profile picture"</mark> ... href="/<mark style="background-color: orange">403139539857741</mark>/photos/509205822584445/"></a>
+
+But as Facebook doesnt pass the HTML seen in the inspector in the browser I didn't go for a xpath like <br />
+`//*[@*='Profile picture']` which works just fine e.g. in Chrome when having the English as the language.
+
+Instead I found the "entitiy_id" key in the response which contains the user id: `"entity_id":"403139539857741"}`
+So i just parsed that out using String split and voilà there is the wanted id :)
+
+-----------------------------------
