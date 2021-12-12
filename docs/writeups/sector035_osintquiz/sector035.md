@@ -223,7 +223,7 @@ with the attribute "arial-label" having the value "Profile picture".
 <br />
 
 #### The manual way
-
+ After 
  ![Gif showing the manual way of getting a facebook id](./images/howto_facebook_id.gif) 
 Doing it manually my favorite way is inspecting the profile picture and getting the id from the picture url:
 > <a <mark style="background-color: lightblue">aria-label="Profile picture"</mark> ... href="/<mark style="background-color: orange">403139539857741</mark>/photos/509205822584445/"></a>
@@ -235,3 +235,75 @@ Instead I found the "entitiy_id" key in the response which contains the user id:
 So i just parsed that out using String split and voilà there is the wanted id :)
 
 -----------------------------------
+
+### Challenge 5
+
+> At what timestamp was the following TikTok posted? This will be a 10-digit number in 'UNIX time', that can be 
+> found in the source.
+> https://www.tiktok.com/@aizhana_or/video/6754400110869859590
+
+So the first step was to see how one manually would find the exact timestamp. <br />
+This was especially interesting as I have never used Tiktok before. Years ago I was on Facebook but decided to delete 
+all that fake happy life stuff and sticked with twitter :)
+
+Opening up the tiktok all we can see is 2019-11-1 as timestamp:
+
+<img src="./images/challenge5_tiktok_screenshot.png" width="650" >
+
+But what we need for the challenge is the exact UNIX timestamp.
+
+What I like to do if I am looking for more information than what is displayed is open the 
+developer tools and searching for keywords. <br />
+Keep in mind that Firefox developer tools don't provide a CTRL+F function but Chrome does.
+
+As we are looking for the upload timestamp I searched for keywords like
+- upload
+- date
+- time
+- create
+
+It's a bit like bruteforcing simple CTF challenges. Before starting I often think 
+"oh, this will never work" or "it'll be something I am not thinking about".
+But similiar to those ctf challenge the timestamp we are looking for here, is easier to 
+find as you might think.
+
+<img src="./images/challenge5_tiktok_search_time.png" width="650" >
+
+As there are only 4 results for the keyword "time" copy them to your favorite texteditor
+(I love sublime <3) and search them in there to find the context.
+
+<img src="./images/challenge5_tiktok_createTime.png" width="650" >
+
+Now we can see the attribute we are looking for is not time but "createTime".
+If you are doing this manually you could just create the md5sum of this UNIX timestamp 
+and that is you finished the challenge.
+
+As I want to do this using Python, I copied the code from challenge 4 because it seems pretty 
+similiar to automate:
+[challenge005.py](https://github.com/road2OSINTautomation/ctfs/blob/main/src/sector035_osintquiz/challenge005py)
+
+
+```python
+import requests
+import datetime
+
+user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4476.0 " \
+             "Safari/537.36 "
+HEADERS = ({'User-Agent': user_agent,
+            'Accept-Language': 'en-US, en;q=0.8'})
+
+tiktok_url = "https://www.tiktok.com/@aizhana_or/video/6754400110869859590"
+
+response = requests.get(tiktok_url, headers=HEADERS)
+response_string = str(response.content)
+create_time = response_string.split('createTime":')[1].split(",")[0]
+
+print("Tiktok url:\t\t\t\t\t\t\t" + tiktok_url)
+print("CreateTime (UNIX Timestmap):\t\t" + create_time)
+print("CreateTime (humanreadable):\t\t\t" +
+      datetime.datetime.fromtimestamp(int(create_time)).strftime('%Y-%m-%d %H:%M:%S'))
+
+```
+
+All there was left to do was to change the split to extract the value of "createTime" and for a better readable 
+output I converted the UNIX timestamp to a human-readable timestamp
