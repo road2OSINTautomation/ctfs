@@ -220,6 +220,7 @@ print("ID:\t\t\t\t\t" + profile_id)
 I would have preferred to parse the html with beautifulsoup or lxml and get the profile picture by the element 
 with the attribute "arial-label" having the value "Profile picture".
 
+ ![Gif showing the manual way of getting a facebook id](./images/howto_facebook_id.gif) </br>
 Doing it manually my favorite way is inspecting the profile picture and getting the id from the picture url:
 > <a <mark style="background-color: lightblue">aria-label="Profile picture"</mark> ... href="/<mark style="background-color: orange">403139539857741</mark>/photos/509205822584445/"></a>
 
