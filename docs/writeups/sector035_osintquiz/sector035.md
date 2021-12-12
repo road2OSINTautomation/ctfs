@@ -224,7 +224,7 @@ Doing it manually my favorite way is inspecting the profile picture and getting 
 > <a <mark style="background-color: lightblue">aria-label="Profile picture"</mark> ... href="/<mark style="background-color: orange">403139539857741</mark>/photos/509205822584445/"></a>
 
 But as Facebook doesnt pass the HTML seen in the inspector in the browser I didn't go for a xpath like <br />
-`//*[@*='Profile picture']` which works just fine e.g. in Chrome when having the English as the language.
+`//*[@*='Profile picture']` which works just fine e.g. in Chrome when having English as the language.
 
 Instead I found the "entitiy_id" key in the response which contains the user id: `"entity_id":"403139539857741"}`
 So i just parsed that out using String split and voilà there is the wanted id :)
