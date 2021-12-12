@@ -12,5 +12,3 @@ response_string = str(response.content)
 profile_id = response_string.split('entity_id":"')[1].split('"}')[0]
 print("Facebook profile:\t" + profile_url)
 print("ID:\t\t\t\t\t" + profile_id)
-
-print(response_string)
