@@ -280,7 +280,7 @@ and that is you finished the challenge.
 
 As I want to do this using Python, I copied the code from challenge 4 because it seems pretty 
 similiar to automate:
-[challenge005.py](https://github.com/road2OSINTautomation/ctfs/blob/main/src/sector035_osintquiz/challenge005py)
+[challenge005.py](https://github.com/road2OSINTautomation/ctfs/blob/main/src/sector035_osintquiz/challenge005.py)
 
 
 ```python
@@ -309,3 +309,77 @@ All there was left to do was to change the split to extract the value of "create
 output I converted the UNIX timestamp to a human-readable timestamp
 
 -----------------------------------
+
+### Challenge 6
+
+> On what date was the domain facebook.com registered for the first time?
+
+As there are many websites with nice graphical user interfaces for doing whois lookups I 
+will use the python library whois.
+To be able to run this little script on your computer you must make sure to install the right library
+`pip install python-whois`.
+
+Doing a whois-request using this library will return the same information as using a website for the request:
+```json
+{
+  "domain_name": "FACEBOOK.COM",
+  "registrar": "RegistrarSafe, LLC",
+  "whois_server": "whois.registrarsafe.com",
+  "referral_url": null,
+  "updated_date": "2022-01-26 16:45:06",
+  "creation_date": "1997-03-29 05:00:00",
+  "expiration_date": "2031-03-30 04:00:00",
+  "name_servers": [
+    "A.NS.FACEBOOK.COM",
+    "B.NS.FACEBOOK.COM",
+    "C.NS.FACEBOOK.COM",
+    "D.NS.FACEBOOK.COM"
+  ],
+  "status": [
+    "clientDeleteProhibited https://icann.org/epp#clientDeleteProhibited",
+    "clientTransferProhibited https://icann.org/epp#clientTransferProhibited",
+    "clientUpdateProhibited https://icann.org/epp#clientUpdateProhibited",
+    "serverDeleteProhibited https://icann.org/epp#serverDeleteProhibited",
+    "serverTransferProhibited https://icann.org/epp#serverTransferProhibited",
+    "serverUpdateProhibited https://icann.org/epp#serverUpdateProhibited",
+    "serverUpdateProhibited https://www.icann.org/epp#serverUpdateProhibited",
+    "clientDeleteProhibited https://www.icann.org/epp#clientDeleteProhibited",
+    "clientTransferProhibited https://www.icann.org/epp#clientTransferProhibited",
+    "serverDeleteProhibited https://www.icann.org/epp#serverDeleteProhibited",
+    "serverTransferProhibited https://www.icann.org/epp#serverTransferProhibited",
+    "clientUpdateProhibited https://www.icann.org/epp#clientUpdateProhibited"
+  ],
+  "emails": [
+    "abusecomplaints@registrarsafe.com",
+    "domain@fb.com"
+  ],
+  "dnssec": "unsigned",
+  "name": "Domain Admin",
+  "org": "Meta Platforms, Inc.",
+  "address": "1601 Willow Rd",
+  "city": "Menlo Park",
+  "state": "CA",
+  "zipcode": "94025",
+  "country": "US"
+}
+```
+As the question is about the first date the domain was registered it must be the creation date. <br>
+This response comes as json and therefore can easily be parsed using Python.
+The complete code for solving [challenge 6](https://github.com/road2OSINTautomation/ctfs/blob/main/src/sector035_osintquiz/challenge006.py)
+is:
+```python
+import whois
+import hashlib
+
+domain = "facebook.com"
+w = whois.whois(domain)
+print(w)
+exit()
+print("Creation date of \""+domain +"\": " +str(w['creation_date']))
+
+date_correct_format = w['creation_date'].strftime("%Y%m%d")
+print(date_correct_format)
+
+encoded_text = hashlib.md5(date_correct_format.encode())
+print("MD5 of " + date_correct_format + ": " + str(encoded_text.hexdigest()))
+```
